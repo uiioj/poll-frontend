@@ -63,17 +63,17 @@ export default function App() {
       }
 
       setResult(data);
-      setLoading(false);
     } catch (err) {
       setError("Network error");
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2 style={styles.title}> Create Poll</h2>
+        <h2 style={styles.title}>Create Poll</h2>
 
         <input
           style={styles.input}
@@ -110,7 +110,7 @@ export default function App() {
 
         {result && (
           <div style={styles.resultBox}>
-            <h3> Poll Created Successfully</h3>
+            <h3>Poll Created 🎉</h3>
             <p>
               <b>ID:</b> {result.pollId}
             </p>
@@ -121,7 +121,7 @@ export default function App() {
   );
 }
 
-/*  Styles */
+/* Styles */
 const styles = {
   container: {
     display: "flex",
