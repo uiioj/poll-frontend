@@ -30,26 +30,26 @@ export default function VotePage() {
   if (!poll) return <p>Loading...</p>;
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>{poll.question}</h2>
+    <div className="container">
+      <h2 className="title">{poll.question}</h2>
 
       {poll.options.map((opt, i) => (
-        <div key={i}>
-          <label>
-            <input
-              type="radio"
-              name="vote"
-              value={opt.text}
-              onChange={(e) => setSelected(e.target.value)}
-            />
-            {opt.text}
-          </label>
-        </div>
+        <label key={i} style={{ display: "block", marginBottom: 10 }}>
+          <input
+            type="radio"
+            name="vote"
+            value={opt.text}
+            onChange={(e) => setSelected(e.target.value)}
+          />{" "}
+          {opt.text}
+        </label>
       ))}
 
-      <button onClick={vote}>Vote</button>
+      <button className="btn primary" onClick={vote} disabled={!selected}>
+        Vote
+      </button>
 
-      <p>{message}</p>
+      {message && <p className="box">{message}</p>}
     </div>
   );
 }

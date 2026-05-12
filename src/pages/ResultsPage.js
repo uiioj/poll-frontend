@@ -16,14 +16,17 @@ export default function ResultsPage() {
   if (!result) return <p>Loading...</p>;
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>{result.question}</h2>
-      <h4>Total Votes: {result.totalVotes}</h4>
+    <div className="container">
+      <h2 className="title">{result.question}</h2>
+
+      <p>
+        <b>Total Votes:</b> {result.totalVotes}
+      </p>
 
       {result.results.map((opt, i) => (
-        <p key={i}>
-          {opt.text} - {opt.votes} votes
-        </p>
+        <div key={i} className="box">
+          {opt.text} — <b>{opt.votes}</b> votes
+        </div>
       ))}
     </div>
   );

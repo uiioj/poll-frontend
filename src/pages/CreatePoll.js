@@ -8,6 +8,7 @@ export default function CreatePoll() {
   const [options, setOptions] = useState(["", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [result, setResult] = useState(null);
 
   const navigate = useNavigate();
 
@@ -21,9 +22,27 @@ export default function CreatePoll() {
     setOptions([...options, ""]);
   };
 
-  const createPoll = async () => {
-    setLoading(true);
+  const validate = () => {
+    const clean = options.filter((o) => o.trim() !== "");
+
+    if (!question.trim()) {
+      setError("Question is required");
+      return false;
+    }
+
+    if (clean.length < 2) {
+      setError("At least 2 options required");
+      return false;
+    }
+
     setError("");
+    return true;
+  };
+
+  const createPoll = async () => {
+    if (!validate()) return;
+
+    setLoading(true);
 
     try {
       const res = await fetch(`${API}/poll`, {
@@ -45,7 +64,9 @@ export default function CreatePoll() {
         return;
       }
 
-      // 🔥 أهم خطوة: نروح لصفحة التصويت مباشرة
+      setResult(data);
+
+      // نروح مباشرة لصفحة التصويت
       navigate(`/vote/${data.pollId}`);
     } catch (err) {
       setError("Network error");
@@ -55,36 +76,42 @@ export default function CreatePoll() {
   };
 
   return (
-    <div style={{ padding: 20, maxWidth: 400, margin: "auto" }}>
-      <h2>Create Poll</h2>
+    <div className="container">
+      <h2 className="title">Create Poll</h2>
 
       <input
+        className="input"
         placeholder="Enter question"
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
-        style={{ width: "100%", marginBottom: 10 }}
       />
 
       {options.map((opt, i) => (
         <input
           key={i}
+          className="input"
           placeholder={`Option ${i + 1}`}
           value={opt}
           onChange={(e) => handleOptionChange(i, e.target.value)}
-          style={{ width: "100%", marginBottom: 10 }}
         />
       ))}
 
-      <button onClick={addOption}>Add Option</button>
+      <button className="btn secondary" onClick={addOption}>
+        + Add Option
+      </button>
 
-      <br />
-      <br />
+      {error && <p className="error">{error}</p>}
 
-      <button onClick={createPoll} disabled={loading}>
+      <button className="btn primary" onClick={createPoll} disabled={loading}>
         {loading ? "Creating..." : "Create Poll"}
       </button>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {result && (
+        <div className="box">
+          <b>Poll Created 🎉</b>
+          <p>ID: {result.pollId}</p>
+        </div>
+      )}
     </div>
   );
 }
