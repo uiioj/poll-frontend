@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const API = "https://5f7ogy3fbj.execute-api.us-east-1.amazonaws.com/dev";
 
 export default function VotePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [poll, setPoll] = useState(null);
   const [selected, setSelected] = useState("");
@@ -27,7 +28,7 @@ export default function VotePage() {
     setMessage(data.message);
   };
 
-  if (!poll) return <p>Loading...</p>;
+  if (!poll) return <p style={{ padding: 20 }}>Loading...</p>;
 
   return (
     <div className="container">
@@ -45,11 +46,21 @@ export default function VotePage() {
         </label>
       ))}
 
+      {/* زر التصويت */}
       <button className="btn primary" onClick={vote} disabled={!selected}>
         Vote
       </button>
 
+      {/* رسالة بعد التصويت */}
       {message && <p className="box">{message}</p>}
+
+      {/* زر النتائج */}
+      <button
+        onClick={() => navigate(`/results/${id}`)}
+        className="btn secondary"
+      >
+        View Results
+      </button>
     </div>
   );
 }
