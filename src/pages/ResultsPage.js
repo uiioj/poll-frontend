@@ -13,21 +13,38 @@ export default function ResultsPage() {
       .then((data) => setResult(data));
   }, [id]);
 
-  if (!result) return <p>Loading...</p>;
+  if (!result) return <p style={{ textAlign: "center" }}>Loading...</p>;
 
   return (
-    <div className="container">
-      <h2 className="title">{result.question}</h2>
+    <div style={styles.page}>
+      <div style={styles.card}>
+        <h2>{result.question}</h2>
+        <p>Total Votes: {result.totalVotes}</p>
 
-      <p>
-        <b>Total Votes:</b> {result.totalVotes}
-      </p>
-
-      {result.results.map((opt, i) => (
-        <div key={i} className="box">
-          {opt.text} — <b>{opt.votes}</b> votes
-        </div>
-      ))}
+        {result.results.map((r, i) => (
+          <p key={i}>
+            {r.text} - {r.votes}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
+
+const styles = {
+  page: {
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#f4f6fb",
+    fontFamily: "Arial",
+  },
+  card: {
+    width: 400,
+    background: "white",
+    padding: 25,
+    borderRadius: 15,
+    boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
+  },
+};

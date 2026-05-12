@@ -9,7 +9,6 @@ export default function VotePage() {
 
   const [poll, setPoll] = useState(null);
   const [selected, setSelected] = useState("");
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetch(`${API}/poll/${id}`)
@@ -18,49 +17,82 @@ export default function VotePage() {
   }, [id]);
 
   const vote = async () => {
-    const res = await fetch(`${API}/vote/${id}`, {
+    await fetch(`${API}/vote/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ option: selected }),
     });
-
-    const data = await res.json();
-    setMessage(data.message);
   };
 
-  if (!poll) return <p style={{ padding: 20 }}>Loading...</p>;
+  if (!poll) return <p style={{ textAlign: "center" }}>Loading...</p>;
 
   return (
-    <div className="container">
-      <h2 className="title">{poll.question}</h2>
+    <div style={styles.page}>
+      <div style={styles.card}>
+        <h2>{poll.question}</h2>
 
-      {poll.options.map((opt, i) => (
-        <label key={i} style={{ display: "block", marginBottom: 10 }}>
-          <input
-            type="radio"
-            name="vote"
-            value={opt.text}
-            onChange={(e) => setSelected(e.target.value)}
-          />{" "}
-          {opt.text}
-        </label>
-      ))}
+        {poll.options.map((o, i) => (
+          <label key={i} style={styles.option}>
+            <input
+              type="radio"
+              name="vote"
+              value={o.text}
+              onChange={(e) => setSelected(e.target.value)}
+            />
+            {o.text}
+          </label>
+        ))}
 
-      {/* زر التصويت */}
-      <button className="btn primary" onClick={vote} disabled={!selected}>
-        Vote
-      </button>
+        <button style={styles.mainBtn} onClick={vote} disabled={!selected}>
+          Vote
+        </button>
 
-      {/* رسالة بعد التصويت */}
-      {message && <p className="box">{message}</p>}
-
-      {/* زر النتائج */}
-      <button
-        onClick={() => navigate(`/results/${id}`)}
-        className="btn secondary"
-      >
-        View Results
-      </button>
+        <button
+          style={styles.grayBtn}
+          onClick={() => navigate(`/results/${id}`)}
+        >
+          View Results
+        </button>
+      </div>
     </div>
   );
 }
+
+const styles = {
+  page: {
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#f4f6fb",
+    fontFamily: "Arial",
+  },
+  card: {
+    width: 400,
+    background: "white",
+    padding: 25,
+    borderRadius: 15,
+    boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
+  },
+  option: {
+    display: "block",
+    marginBottom: 10,
+  },
+  mainBtn: {
+    width: "100%",
+    padding: 12,
+    background: "#4f46e5",
+    color: "white",
+    border: "none",
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  grayBtn: {
+    width: "100%",
+    padding: 10,
+    marginTop: 10,
+    background: "#e5e7eb",
+    border: "none",
+    borderRadius: 8,
+  },
+};
